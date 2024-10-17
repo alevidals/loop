@@ -55,6 +55,8 @@ export function FilterSheet({ triggerClassName, colors, minMaxPrices }: Props) {
   }
 
   function resetFilters() {
+    if (searchParams.size === 1 && searchParams.get("page")) return;
+
     setMin(minRange);
     setMax(maxRange);
 
