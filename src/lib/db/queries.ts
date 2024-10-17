@@ -1,3 +1,4 @@
+import { ITEMS_PER_PAGE } from "@/app/(app)/[gender]/_components/product-list";
 import { verifyToken } from "@/lib/auth/session";
 import { db } from "@/lib/db/drizzle";
 import {
@@ -31,6 +32,7 @@ import {
   lte,
   max,
   min,
+  sql,
 } from "drizzle-orm";
 import { unstable_noStore as noStore } from "next/cache";
 import { cookies } from "next/headers";
@@ -43,6 +45,7 @@ type GetProductsArgs = {
   color?: string;
   priceMin?: number;
   priceMax?: number;
+  page?: number;
 };
 
 type CreateDeleteWishlistArgs = {
@@ -143,6 +146,7 @@ export async function getProducts({
   color,
   priceMin,
   priceMax,
+  page,
 }: GetProductsArgs) {
   noStore();
 
@@ -178,7 +182,7 @@ export async function getProducts({
     whereFilters.push(lte(productsSchema.price, priceMax));
   }
 
-  const products = await db
+  const { products, totalProducts } = await db
     .select({
       productVariantId: productVariantsSchema.id,
       price: productsSchema.price,
@@ -190,6 +194,7 @@ export async function getProducts({
       colorName: colorsSchema.name,
       createdAt: productVariantsSchema.createdAt,
       isWishlisted: isNotNull(wishlistsSchema.userId),
+      totalProducts: sql`count(${productVariantsSchema.id}) OVER ()`,
     })
     .from(productVariantsSchema)
     .leftJoin(
@@ -219,14 +224,21 @@ export async function getProducts({
         ? asc(productsSchema.price)
         : desc(productsSchema.price),
     )
-    .then((result) =>
-      result.map((product) => ({
+    .limit(ITEMS_PER_PAGE)
+    .offset(page ? (page - 1) * ITEMS_PER_PAGE : 0)
+    .then((result) => {
+      const products = result.map((product) => ({
         ...product,
         isWishlisted: product.isWishlisted === 1,
-      })),
-    );
+      }));
 
-  return products;
+      return {
+        products,
+        totalProducts: (result[0]?.totalProducts as number) ?? 0,
+      };
+    });
+
+  return { products, totalProducts };
 }
 
 export async function getProduct(slug: string) {

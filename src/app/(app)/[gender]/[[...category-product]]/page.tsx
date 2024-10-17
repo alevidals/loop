@@ -13,6 +13,7 @@ type Props = {
     color: string;
     price_min: string;
     price_max: string;
+    page: string;
   };
 };
 
@@ -34,20 +35,25 @@ export default async function CategoryGenderPage(props: Props) {
   const productSlug = props.params["category-product"]?.[1];
 
   if (!productSlug) {
-    const products = await getProducts({
+    const page = props.searchParams.page ? +props.searchParams.page : 1;
+    const priceMin = props.searchParams.price_min
+      ? +props.searchParams.price_min * 100
+      : undefined;
+    const priceMax = props.searchParams.price_max
+      ? +props.searchParams.price_max * 100
+      : undefined;
+
+    const { products, totalProducts } = await getProducts({
       gender: props.params.gender === "man" ? "M" : "F",
       category: categorySlug,
       orderBy: props.searchParams.sort,
       color: props.searchParams.color,
-      priceMin: props.searchParams.price_min
-        ? +props.searchParams.price_min * 100
-        : undefined,
-      priceMax: props.searchParams.price_max
-        ? +props.searchParams.price_max * 100
-        : undefined,
+      priceMin,
+      priceMax,
+      page,
     });
 
-    return <ProductList products={products} />;
+    return <ProductList products={products} totalProducts={totalProducts} />;
   }
 
   const product = await getProduct(productSlug);

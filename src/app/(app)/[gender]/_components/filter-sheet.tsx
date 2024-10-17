@@ -45,6 +45,7 @@ export function FilterSheet({ triggerClassName, colors, minMaxPrices }: Props) {
 
   function addFilter(filters: { key: string; value: string }[]) {
     const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete("page");
 
     for (const filter of filters) {
       newSearchParams.set(filter.key, filter.value);
