@@ -20,7 +20,7 @@ type Props = {
   minMaxPrices: MinMaxPrices;
 };
 
-const EXCLUDED_PATHS = ["/", "/account", "/search"];
+const EXCLUDED_PATHS = ["/account", "/search"];
 
 function DesktopCategoryLink({ category }: { category: Category }) {
   const pathname = usePathname();
@@ -82,7 +82,11 @@ export function CategorySelector({ categories, colors, minMaxPrices }: Props) {
     slug: "_",
   };
 
-  if (EXCLUDED_PATHS.includes(pathname)) return null;
+  if (
+    pathname === "/" ||
+    EXCLUDED_PATHS.some((path) => pathname.startsWith(path))
+  )
+    return null;
 
   return (
     <>
