@@ -1,24 +1,14 @@
 import { CategorySelector } from "@/app/(app)/[gender]/_components/category-selector";
 import { SearchDialog } from "@/app/(app)/[gender]/_components/search-dialog";
 import { UserButton } from "@/app/(app)/[gender]/_components/user-button";
-import {
-  getColors,
-  getLowerAndUpperPrices,
-  getMainCategories,
-  getShoppingBagItems,
-  getWishlistItems,
-} from "@/lib/db/queries";
+import { getShoppingBagItems, getWishlistItems } from "@/lib/db/queries";
 import Link from "next/link";
 
 export async function Header() {
-  const [shoppingBagItems, wishlistItems, categories, colors, minMaxPrices] =
-    await Promise.all([
-      getShoppingBagItems(),
-      getWishlistItems(),
-      getMainCategories(),
-      getColors(),
-      getLowerAndUpperPrices(),
-    ]);
+  const [shoppingBagItems, wishlistItems] = await Promise.all([
+    getShoppingBagItems(),
+    getWishlistItems(),
+  ]);
 
   return (
     <header className="sticky top-0 z-50 bg-transparent w-full">
@@ -37,11 +27,7 @@ export async function Header() {
           />
         </div>
       </div>
-      <CategorySelector
-        categories={categories}
-        colors={colors}
-        minMaxPrices={minMaxPrices}
-      />
+      <CategorySelector />
     </header>
   );
 }

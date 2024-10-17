@@ -4,6 +4,7 @@ import "./globals.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { UserProvider } from "@/lib/auth/provider";
 import { getUser } from "@/lib/db/queries";
+import { ReactQueryProvider } from "@/providers/react-query-provider";
 import { Toaster } from "@/ui/sonner";
 
 const geistSans = localFont({
@@ -70,9 +71,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-white dark mx-12`}
       >
         <UserProvider userPromise={userPromise}>
-          {children}
-          <Toaster />
-          <TailwindIndicator />
+          <ReactQueryProvider>
+            {children}
+            <Toaster />
+            <TailwindIndicator />
+          </ReactQueryProvider>
         </UserProvider>
       </body>
     </html>

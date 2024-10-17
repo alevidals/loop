@@ -2,7 +2,6 @@ import { LikeButton } from "@/app/(app)/[gender]/_components/like-button";
 import type { Product } from "@/lib/types";
 import { cn, priceToEuro } from "@/lib/utils";
 import { Badge } from "@/ui/badge";
-import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
@@ -28,12 +27,7 @@ export function ProductCard({ product }: Props) {
   return (
     <div>
       <Link href={href} key={product.productVariantId}>
-        <Image
-          src={product.imageUrl}
-          alt={product.name ?? ""}
-          width={999}
-          height={999}
-        />
+        <img src={product.imageUrl} alt={product.name ?? ""} />
       </Link>
       <div className="mt-3 flex items-center justify-between px-3">
         <Badge

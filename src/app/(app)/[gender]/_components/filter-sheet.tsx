@@ -18,8 +18,8 @@ import { useState } from "react";
 
 type Props = {
   triggerClassName?: string;
-  colors: string[];
-  minMaxPrices: MinMaxPrices;
+  colors?: string[];
+  minMaxPrices?: MinMaxPrices;
 };
 
 const priceFormatter = new Intl.NumberFormat("es-ES", {
@@ -105,7 +105,7 @@ export function FilterSheet({ triggerClassName, colors, minMaxPrices }: Props) {
           <div>
             <h3 className="font-bold text-xl">Color</h3>
             <div className="flex flex-wrap gap-3 mt-4">
-              {colors.map((color) => (
+              {colors?.map((color) => (
                 <button
                   key={color}
                   type="button"
