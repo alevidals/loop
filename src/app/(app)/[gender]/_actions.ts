@@ -110,6 +110,7 @@ export const removeFromCart = validatedActionWithUser(
 
 const getProductsByNameSchema = z.object({
   name: z.string().min(3),
+  page: z.string(),
 });
 
 export const getProductsByName = validatedAction(
@@ -119,6 +120,7 @@ export const getProductsByName = validatedAction(
 
     const products = await getProducts({
       searchTerm: name,
+      page: data.page ? +data.page : 1,
     });
 
     return {

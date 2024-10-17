@@ -30,11 +30,13 @@ export type ShippingAddress = Awaited<
   ReturnType<typeof getShippingAddresses>
 >[number];
 
-export type Product = Awaited<ReturnType<typeof getProducts>>[number];
+export type Product = Awaited<
+  ReturnType<typeof getProducts>
+>["products"][number];
 
 export type ProductByName = Awaited<
   ReturnType<typeof getProductsByName>
->["products"][number];
+>["products"]["products"][number];
 
 export type ShoppingBagItem = Awaited<
   ReturnType<typeof getShoppingBagItems>

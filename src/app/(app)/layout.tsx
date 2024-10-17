@@ -7,10 +7,10 @@ export default function AppLayout({
   children: ReactNode;
 }) {
   return (
-    <div>
+    <div className="min-h-dvh flex flex-col">
       <Header />
-      {children}
-      <footer className="mt-12 h-24 flex items-center justify-center font-bold">
+      <div className="flex-1">{children}</div>
+      <footer className="mt-2 h-24 flex items-center justify-center font-bold">
         ~ LOOP Copyright {new Date().getFullYear()} &copy; ~
       </footer>
     </div>

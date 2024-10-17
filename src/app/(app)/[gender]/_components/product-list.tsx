@@ -7,7 +7,7 @@ type Props = {
   totalProducts: number;
 };
 
-export const ITEMS_PER_PAGE = 3;
+export const ITEMS_PER_PAGE = 15;
 
 export function ProductList({ products, totalProducts }: Props) {
   if (products.length === 0) {

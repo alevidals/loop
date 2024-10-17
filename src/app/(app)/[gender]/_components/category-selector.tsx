@@ -1,7 +1,6 @@
 "use client";
 
 import { FilterSheet } from "@/app/(app)/[gender]/_components/filter-sheet";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { Category, MinMaxPrices } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { NavigationMenuLink } from "@/ui/navigation-menu";
@@ -12,36 +11,16 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/ui/navigation-menu";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const EXCLUDED_PATHS = ["/", "/account"];
+type Props = {
+  categories: Category[];
+  colors: string[];
+  minMaxPrices: MinMaxPrices;
+};
 
-async function getCategories() {
-  const response = await fetch("/api/queries/categories");
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  if (!response.ok) throw new Error("Failed to fetch categories");
-
-  return await response.json().then((data) => data as Category[]);
-}
-
-async function getColors() {
-  const response = await fetch("/api/queries/colors");
-
-  if (!response.ok) throw new Error("Failed to fetch colors");
-
-  return await response.json().then((data) => data as string[]);
-}
-
-async function getMinMaxPrices() {
-  const response = await fetch("/api/queries/prices");
-
-  if (!response.ok) throw new Error("Failed to fetch min-max-prices");
-
-  return await response.json().then((data) => data as MinMaxPrices);
-}
+const EXCLUDED_PATHS = ["/", "/account", "/search"];
 
 function DesktopCategoryLink({ category }: { category: Category }) {
   const pathname = usePathname();
@@ -94,24 +73,8 @@ function MobileCategoryLink({ category }: { category: Category }) {
   );
 }
 
-export function CategorySelector() {
+export function CategorySelector({ categories, colors, minMaxPrices }: Props) {
   const pathname = usePathname();
-  if (EXCLUDED_PATHS.includes(pathname)) return null;
-
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getCategories,
-  });
-
-  const { data: colors, isLoading: isColorsLoading } = useQuery({
-    queryKey: ["colors"],
-    queryFn: getColors,
-  });
-
-  const { data: minMaxPrices, isLoading: isMinMaxPricesLoading } = useQuery({
-    queryKey: ["min-max-prices"],
-    queryFn: getMinMaxPrices,
-  });
 
   const allItems: Category = {
     id: "0",
@@ -119,64 +82,40 @@ export function CategorySelector() {
     slug: "_",
   };
 
+  if (EXCLUDED_PATHS.includes(pathname)) return null;
+
   return (
     <>
-      <div className="h-12 relative items-center justify-center hidden md:flex">
-        {isCategoriesLoading || isColorsLoading || isMinMaxPricesLoading ? (
-          <div className="flex space-x-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton
-                // biome-ignore lint/suspicious/noArrayIndexKey:
-                key={i}
-                className="bg-muted text-foreground text-sm rounded-lg h-9 w-32"
-              />
-            ))}
-          </div>
-        ) : (
-          <>
-            <ul className="flex space-x-4 items-center justify-center">
-              <DesktopCategoryLink category={allItems} />
-              {categories?.map((category) => (
-                <DesktopCategoryLink key={category.id} category={category} />
-              ))}
-            </ul>
-            <FilterSheet
-              triggerClassName="absolute right-0 top-0 h-12"
-              colors={colors}
-              minMaxPrices={minMaxPrices}
-            />
-          </>
-        )}
+      <div className="h-12 relative hidden md:block">
+        <ul className="flex space-x-4 items-center justify-center">
+          <DesktopCategoryLink category={allItems} />
+          {categories.map((category) => (
+            <DesktopCategoryLink key={category.id} category={category} />
+          ))}
+        </ul>
+        <FilterSheet
+          triggerClassName="absolute right-0 top-0 h-12"
+          colors={colors}
+          minMaxPrices={minMaxPrices}
+        />
       </div>
       <div className="flex items-center justify-between md:hidden">
-        {isCategoriesLoading || isColorsLoading || isMinMaxPricesLoading ? (
-          <div className="flex items-center justify-between w-full">
-            <Skeleton className="w-28 h-9" />
-            <Skeleton className="h-9 w-9" />
-          </div>
-        ) : (
-          <>
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[350px] gap-3 p-4 md:grid-cols-2">
-                      <MobileCategoryLink category={allItems} />
-                      {categories?.map((category) => (
-                        <MobileCategoryLink
-                          key={category.id}
-                          category={category}
-                        />
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <FilterSheet colors={colors} minMaxPrices={minMaxPrices} />
-          </>
-        )}
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[350px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  <MobileCategoryLink category={allItems} />
+                  {categories.map((category) => (
+                    <MobileCategoryLink key={category.id} category={category} />
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <FilterSheet colors={colors} minMaxPrices={minMaxPrices} />
       </div>
     </>
   );
