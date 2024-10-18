@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Heart, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 type Props = {
   shoppingBagItems: ShoppingBagItemType[];
@@ -127,6 +128,8 @@ function WishlistItem({ product }: WishlistItemProps) {
 }
 
 export function CartWishSidebar({ shoppingBagItems, wishlistItems }: Props) {
+  const badgeRef = useRef<HTMLDivElement>(null);
+
   const totalItems = shoppingBagItems.reduce(
     (acc, item) => acc + item.quantity,
     0,
@@ -141,12 +144,24 @@ export function CartWishSidebar({ shoppingBagItems, wishlistItems }: Props) {
     ),
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
+  useEffect(() => {
+    badgeRef.current?.classList.add("animate-bounce");
+
+    setTimeout(() => {
+      badgeRef.current?.classList.remove("animate-bounce");
+    }, 1500);
+  }, [totalItems]);
+
   return (
     <Sheet>
       <SheetTrigger className="relative">
         <ShoppingBasket />
         {totalItems > 0 ? (
-          <Badge className="absolute -bottom-2 -right-2 rounded-full size-5 flex items-center justify-center">
+          <Badge
+            className="absolute -bottom-2 -right-2 rounded-full size-5 flex items-center justify-center"
+            ref={badgeRef}
+          >
             {totalItems}
           </Badge>
         ) : null}

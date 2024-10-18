@@ -23,6 +23,7 @@ import {
   CardTitle,
 } from "@/ui/card";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 type Props = {
   shippingAddresses: ShippingAddress[];
@@ -37,13 +38,16 @@ function ShippingAddressCard({ shippingAddress }: ShippingAddressCardProps) {
     const formData = new FormData();
     formData.append("shippingAddressId", shippingAddress.id);
 
-    await deleteShippingAddressAction(
+    const { success, error } = await deleteShippingAddressAction(
       {
         error: "",
         success: "",
       },
       formData,
     );
+
+    const type = success ? "success" : "error";
+    toast[type](success ?? error);
   }
 
   return (

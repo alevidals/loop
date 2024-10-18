@@ -35,6 +35,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 type Props = {
   shippingAddress?: ShippingAddress;
@@ -64,7 +65,12 @@ function ShippingAddressForm({
 
   useEffect(() => {
     if (state.success) {
+      toast.success(state.success);
       setOpen(false);
+    }
+
+    if (state.error) {
+      toast.error(state.error);
     }
   }, [state, setOpen]);
 
@@ -186,16 +192,21 @@ export function AddShippingAddressModal({
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  const title =
+    type === "add" ? "Add shipping address" : "Edit shipping address";
+  const description =
+    type === "add"
+      ? "Add a new shipping address to your account."
+      : "Edit the shipping address.";
+
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px] max-h-[80%] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add shipping address</DialogTitle>
-            <DialogDescription>
-              Add a new shipping address to your account.
-            </DialogDescription>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
           <ShippingAddressForm
             shippingAddress={shippingAddress}
@@ -212,10 +223,8 @@ export function AddShippingAddressModal({
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Add shipping address</DrawerTitle>
-          <DrawerDescription>
-            Add a new shipping address to your account.
-          </DrawerDescription>
+          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
         <ShippingAddressForm
           setOpen={setOpen}

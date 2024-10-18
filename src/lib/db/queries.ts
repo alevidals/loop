@@ -676,7 +676,8 @@ export async function deleteShippingAddress(
   userId: string,
 ) {
   await db
-    .delete(shippingAddressesSchema)
+    .update(shippingAddressesSchema)
+    .set({ userId: null })
     .where(
       and(
         eq(shippingAddressesSchema.id, shippingAddressId),

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     if (!success) throw new Error("Failed to update order status");
 
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/account/purchases", request.url));
   } catch (error) {
     console.error("Error handling successful checkout", error);
     return NextResponse.redirect(new URL("/error", request.url));

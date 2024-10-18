@@ -210,10 +210,6 @@ export const categoryRelations = relations(
   }),
 );
 
-// export const sizeRelations = relations(sizesSchema, ({ many }) => ({
-//   productVariants: many(productVariantsSchema),
-// }));
-
 export const colorRelations = relations(colorsSchema, ({ many }) => ({
   productVariants: many(productVariantsSchema),
 }));

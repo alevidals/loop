@@ -11,6 +11,7 @@ import {
   deleteShippingAddress,
 } from "@/lib/db/queries";
 import { type NewUser, usersSchema } from "@/lib/db/schema";
+import { catchError } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -243,7 +244,11 @@ export const addOrUpdateShippingAddressAction = validatedActionWithUser(
 
     revalidatePath("/account");
 
-    return { success: "Shipping address created successfully" };
+    return {
+      success: `Shipping address ${
+        type === "add" ? "added" : "edited"
+      } successfully.`,
+    };
   },
 );
 
@@ -256,7 +261,20 @@ export const deleteShippingAddressAction = validatedActionWithUser(
   async (data, _, user) => {
     const { shippingAddressId } = data;
 
-    await deleteShippingAddress(shippingAddressId, user.id);
+    const result = await catchError(
+      deleteShippingAddress(shippingAddressId, user.id),
+    );
+
+    if (!result.success) {
+      const errorMsg =
+        typeof result.error === "string" ? result.error : result.error.message;
+
+      console.error(errorMsg);
+
+      return {
+        error: "Shipping address could not be deleted. Please try again.",
+      };
+    }
 
     revalidatePath("/account");
 

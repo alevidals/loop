@@ -22,7 +22,7 @@ export function PersonalDetails() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h2 className="text-2xl mb-4">Personal details</h2>
+      <h2 className="text-xl mb-4">Personal details</h2>
       <form action={formAction} className="grid items-start gap-4">
         <div>
           <Label htmlFor="name" className="text-base">
