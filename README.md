@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<img src="./assets/icon.png" alt="drawing" width="100"/>
 
-## Getting Started
+<details>
+<summary>Table of contents</summary>
 
-First, run the development server:
+- [Screenshots](#screenshots)
+- [To start](#to-start)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+</details>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+----
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![Desktop screenshot 1](./assets/desktop-index.png)
+![Desktop screenshot 2](./assets/desktop-products.png)
+![Desktop screenshot 3](./assets/desktop-product.png)
+![Mobile screenshot](./assets/mobile.png)
 
-## Learn More
+# To start
 
-To learn more about Next.js, take a look at the following resources:
+## Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node > 20 version. You can use [NVM](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) to setup a node version manager
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Package manager
+  - PNPM
+    ```sh
+    npm install -g pnpm
+    ```
 
-## Deploy on Vercel
+  - NPM
+    ```sh
+    npm install -g npm@latest
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  - YARN
+    ```sh
+    npm install -g yarn
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Fill the `.env` file with the required environment variables. You can use the `.env.example` file as a reference.
+
+## Installation  
+
+> If you are going to use a package manager other than "pnpm" run this command before you begin `rm -rf node_modules && rm pnpm-lock.yaml`
+
+1. Clone the repository
+    ```sh
+    git clone https://github.com/alevidals/loop.git
+    ```
+
+2. Install the packages (You can use `npm` or `yarn` instead of `pnpm` if you like)
+    ```sh
+    pnpm install
+    ```
+
+3. Apply migrations and seed the database (You can use `npm` or `yarn` instead of `pnpm` if you like)
+    ```sh
+    pnpm db:migrate && pnpm db:seed
+    ```
+
+4. Execute the project (You can use `npm` or `yarn` instead of `pnpm` if you like)
+    ```sh
+    pnpm run dev
+    ```
